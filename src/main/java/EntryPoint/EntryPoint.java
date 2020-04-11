@@ -6,7 +6,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -89,17 +88,6 @@ public class EntryPoint extends AnAction {
                 final PsiFile[] f = new PsiFile[1];
 
                 Thread t = new Thread(() -> {
-                    PsiFile file1 = event.getData(PlatformDataKeys.PSI_FILE);
-                    assert file1 != null;
-                    PsiDirectory parent = file1.getParent();
-                    assert parent != null;
-                    PsiFile[] files = parent.getFiles();
-
-                    for (PsiFile file : files) {
-                        if (file.getName().equals("result.txt")) {
-                            file.delete();
-                        }
-                    }
                     f[0] = PsiFileFactory.getInstance(project).createFileFromText("result.txt", PlainTextFileType.INSTANCE, text.toString());
                 });
 
@@ -111,6 +99,17 @@ public class EntryPoint extends AnAction {
 
                     if (result == Messages.OK) {
                         WriteAction.run(() -> {
+                            PsiFile file1 = event.getData(PlatformDataKeys.PSI_FILE);
+                            assert file1 != null;
+                            PsiDirectory parent = file1.getParent();
+                            assert parent != null;
+                            PsiFile[] files = parent.getFiles();
+
+                            for (PsiFile file : files) {
+                                if (file.getName().equals("result.txt")) {
+                                    file.delete();
+                                }
+                            }
                             assert file != null;
                             PsiDirectory d = PsiDirectoryFactory.getInstance(project).createDirectory(file.getParent());
                             d.add(f[0]);

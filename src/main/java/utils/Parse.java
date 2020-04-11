@@ -15,7 +15,7 @@ public class Parse {
             attributesValues.add(attribute.getLiteralValue());
         }
 
-        for(String attributeValue : attributesValues){
+        for (String attributeValue : attributesValues) {
             parsedAttributes.add(parseAttribute(attributeValue));
         }
 
@@ -23,20 +23,24 @@ public class Parse {
 
     }
 
-    private  static ArrayList<Integer> parseAttribute(String attribute) {
-        ArrayList<Integer> parsedAttribute = new ArrayList<>();
-        String[] rangeBased = attribute.split(":");
-        String[] discrete = attribute.split(" ");
-        if (rangeBased.length > 1) {
-            for (int i = Integer.parseInt(rangeBased[0]); i <= Integer.parseInt(rangeBased[1]); i++) {
-                parsedAttribute.add(i);
-            }
-        } else if (discrete.length > 1) {
+    private static ArrayList<Integer> parseAttribute(String attribute) {
 
-            for (String value : discrete) {
-                parsedAttribute.add(Integer.parseInt(value));
+        ArrayList<Integer> parsedAttribute = new ArrayList<>();
+
+        String[] discreteStrings = attribute.split(" ");
+
+        for(String discreteString : discreteStrings){
+            String[] rangeBased = discreteString.split(":");
+            if (rangeBased.length > 1) {
+                for (int i = Integer.parseInt(rangeBased[0]); i <= Integer.parseInt(rangeBased[1]); i++) {
+                    parsedAttribute.add(i);
+                }
+            } else {
+                parsedAttribute.add(Integer.parseInt(discreteString));
             }
+
         }
+
         return parsedAttribute;
     }
 }

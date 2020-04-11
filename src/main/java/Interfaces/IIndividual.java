@@ -1,20 +1,14 @@
 package Interfaces;
 
-import java.util.ArrayList;
+public interface IIndividual<ChromosomeType, GeneType> {
 
-public interface IIndividual {
-
-    Object chromosome = null;
-
-    double fitness = -1;
-
-    ArrayList<ArrayList<Integer>> getChromosome();
+    ChromosomeType getChromosome();
 
     int getChromosomeLength();
 
-    void setGene(int offset, ArrayList<Integer> gene);
+    void setGene(int offset,GeneType gene);
 
-    ArrayList<Integer> getGene(int offset);
+    GeneType getGene(int offset);
 
     void setFitness(double fitness);
 
@@ -22,6 +16,5 @@ public interface IIndividual {
 
     String toString();
 
-    void changeGene(int indexOfGeneWithMinimumDistinctPairs, int parameterIndex, Integer missingValue);
 }
 

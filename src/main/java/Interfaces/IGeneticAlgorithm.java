@@ -1,29 +1,22 @@
 package Interfaces;
 
-import java.util.ArrayList;
+import TestDataGeneration.Population;
 
-public interface IGeneticAlgorithm {
+public interface IGeneticAlgorithm<populationType extends IPopulation<? extends IIndividual<?,?>>, individualType extends IIndividual<?,?>> {
 
-    int populationSize = 0;
 
-    double mutationRate = 0;
+    populationType initPopulation();
 
-    double crossoverRate = 0;
+    double calcFitness(individualType individual);
 
-    int elitismCount = 0;
+    void evalPopulation(populationType population);
 
-    IPopulation initPopulation(ArrayList<ArrayList<Integer>> T);
+    boolean isTerminationConditionMet(populationType population);
 
-    double calcFitness(IIndividual individual, int totalDistinctPairs,int totalRepetitivePairs);
+    individualType selectParent(populationType population);
 
-    void evalPopulation(IPopulation population, int totalDistinctPairs,int totalRepetitivePairs);
+    populationType crossoverPopulation(populationType population);
 
-    boolean isTerminationConditionMet(IPopulation population, int size);
-
-    IIndividual selectParent(IPopulation population);
-
-    IPopulation crossoverPopulation(IPopulation population);
-
-    IPopulation mutatePopulation(IPopulation population, ArrayList<ArrayList<Integer>> attributes);
+    populationType mutatePopulation(populationType population);
 
 }

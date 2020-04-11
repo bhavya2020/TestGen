@@ -1,14 +1,13 @@
 package TestDataGeneration;
 
 import Interfaces.IGeneticAlgorithm;
-import Interfaces.IIndividual;
-import Interfaces.IPopulation;
+
 import utils.Pair;
 
 import java.util.*;
 
 
-public class GeneticAlgorithm implements IGeneticAlgorithm {
+public class GeneticAlgorithm implements IGeneticAlgorithm<Population,Individual> {
 
 
     private int populationSize;
@@ -19,22 +18,40 @@ public class GeneticAlgorithm implements IGeneticAlgorithm {
 
     private int elitismCount;
 
-    public GeneticAlgorithm(int populationSize, double mutationRate, double crossoverRate, int elitismCount) {
+    private ArrayList<ArrayList<Integer>> attributes;
+
+    private ArrayList<ArrayList<Integer>> T;
+
+    private int totalDistinctPairs;
+
+    private int totalRepetitivePairs;
+
+    public GeneticAlgorithm(int populationSize, double mutationRate, double crossoverRate, int elitismCount, ArrayList<ArrayList<Integer>> attributes) {
         this.populationSize = populationSize;
         this.mutationRate = mutationRate;
         this.crossoverRate = crossoverRate;
         this.elitismCount = elitismCount;
+        this.attributes = attributes;
     }
 
     @Override
-    public IPopulation initPopulation(ArrayList<ArrayList<Integer>> T) {
+    public Population initPopulation() {
 
-        IPopulation population = new Population(populationSize, T);
-        return population;
+        ArrayList<ArrayList<Integer>> T = new ArrayList<>();
+
+        ArrayList<Integer> TestSet = new ArrayList<>();
+
+        T = createAllTestCases(attributes, T, 0, TestSet);
+
+        Pair<Integer, Integer> P = getAllDistinctPairs(T);
+        this.totalDistinctPairs = P.getKey();
+        this.totalRepetitivePairs = P.getValue();
+
+        return new Population(populationSize, T);
     }
 
     @Override
-    public double calcFitness(IIndividual individual, int totalDistinctPairs, int totalRepetitvePairs) {
+    public double calcFitness(Individual individual) {
 
         Set<ArrayList<Integer>> distinctPairs = new HashSet<>();
         int repetitivePairs = 0;
@@ -44,35 +61,32 @@ public class GeneticAlgorithm implements IGeneticAlgorithm {
                 for (int j = i + 1; j < gene.size(); j++) {
                     ArrayList<Integer> distinctPair = new ArrayList<>();
                     for (int k = 0; k < gene.size(); k++) {
-                        distinctPair.add( k == i ? gene.get(i) : k == j ? gene.get(j) : -1);
+                        distinctPair.add(k == i ? gene.get(i) : k == j ? gene.get(j) : -1);
                     }
-                    if(distinctPairs.contains(distinctPair))
+                    if (distinctPairs.contains(distinctPair))
                         repetitivePairs++;
                     distinctPairs.add(distinctPair);
                 }
             }
 
         }
-        double factor1 =  distinctPairs.size() / (double) totalDistinctPairs;
-        double factor2 =  1 - (repetitivePairs / (double) totalRepetitvePairs);
+        double factor1 = distinctPairs.size() / (double) totalDistinctPairs;
+        double factor2 = 1 - (repetitivePairs / (double) totalRepetitivePairs);
 
-        return 0.70*factor1 + 0.30*factor2 ;
+        return 0.70 * factor1 + 0.30 * factor2;
     }
 
     @Override
-    public void evalPopulation(IPopulation population, int totalDistinctPairs, int totalRepetitivePairs) {
+    public void evalPopulation(Population population) {
 
         double populationFitness = 0;
 
-        // Loop over population evaluating individuals and suming population
-        // fitness
-
         int IndividualIndex = 0;
-        for (IIndividual individual : population.getIndividuals()) {
+        for (Individual  individual : population.getIndividuals()) {
 
-            double fitness = calcFitness(individual,totalDistinctPairs,totalRepetitivePairs);
+            double fitness = calcFitness(individual);
             individual.setFitness(fitness);
-            population.setIndividual(IndividualIndex,individual);
+            population.setIndividual(IndividualIndex, individual);
             populationFitness += fitness;
             IndividualIndex++;
         }
@@ -82,17 +96,17 @@ public class GeneticAlgorithm implements IGeneticAlgorithm {
     }
 
     @Override
-    public boolean isTerminationConditionMet(IPopulation population,int size ) {
+    public boolean isTerminationConditionMet(Population population) {
 
         return population.getFittest().getFitness() == 1;
 //        population.getFittest().getChromosome().size() < 0.75 * size;
     }
 
     @Override
-    public IIndividual selectParent(IPopulation population) {
+    public Individual selectParent(Population population) {
 
         // Get individuals
-        ArrayList<IIndividual> individuals = population.getIndividuals();
+        ArrayList<Individual> individuals = population.getIndividuals();
 
         // Spin roulette wheel
         double populationFitness = population.getPopulationFitness();
@@ -100,7 +114,7 @@ public class GeneticAlgorithm implements IGeneticAlgorithm {
 
         // Find parent
         double spinWheel = 0;
-        for (IIndividual individual : individuals) {
+        for (Individual  individual : individuals) {
             spinWheel += individual.getFitness();
             if (spinWheel >= rouletteWheelPosition) {
                 return individual;
@@ -110,21 +124,21 @@ public class GeneticAlgorithm implements IGeneticAlgorithm {
     }
 
     @Override
-    public IPopulation crossoverPopulation(IPopulation population) {
+    public Population crossoverPopulation(Population population) {
         // Create new population
-        IPopulation newPopulation = new Population(population);
+        Population newPopulation = new Population(population);
 
         // Loop over current population by fitness
         for (int populationIndex = 0; populationIndex < population.size(); populationIndex++) {
 
             //selecting parent based by roulette
-            IIndividual parent1 = selectParent(population);
+            Individual parent1 = selectParent(population);
 
             // Apply crossover to this individual?
             if (this.crossoverRate > Math.random() && populationIndex >= this.elitismCount) {
 
                 // Find second parent
-                IIndividual parent2 = selectParent(population);
+                Individual parent2 = selectParent(population);
 
                 if (parent1 == parent2) {
                     populationIndex--;
@@ -136,36 +150,34 @@ public class GeneticAlgorithm implements IGeneticAlgorithm {
 
                 int crossoverPoint = rand.nextInt(Math.min(parent1.getChromosomeLength(), parent2.getChromosomeLength()));
 
-                IIndividual offspring1 = new Individual(parent2);
+                Individual  offspring1 = new Individual(parent2);
 
-                IIndividual offspring2 = new Individual(parent1);
+                Individual  offspring2 = new Individual(parent1);
 
                 for (int i = 0; i <= crossoverPoint; i++) {
                     offspring1.setGene(i, parent1.getGene(i));
                     offspring2.setGene(i, parent2.getGene(i));
                 }
 
-                IIndividual[] fitnessArray = {offspring1, offspring2, parent1, parent2};
+                Individual[] fitnessArray = {offspring1, offspring2, parent1, parent2};
 
-                IIndividual fittest = null;
+                Individual  fittest = null;
                 double bestFitness = -1;
 
-                for (IIndividual individual : fitnessArray) {
+                for (Individual  individual : fitnessArray) {
                     if (individual.getFitness() > bestFitness) {
                         bestFitness = individual.getFitness();
                         fittest = individual;
                     } else if (individual.getFitness() == bestFitness) {
+                        assert fittest != null;
                         if (individual.getChromosomeLength() < fittest.getChromosomeLength()) {
                             bestFitness = individual.getFitness();
                             fittest = individual;
                         }
                     }
                 }
-
-                // Add fittest of parents and off springs  to new population
                 newPopulation.setIndividual(populationIndex, fittest);
             } else {
-                // Add individual to new population without applying crossover
                 newPopulation.setIndividual(populationIndex, parent1);
             }
         }
@@ -173,21 +185,12 @@ public class GeneticAlgorithm implements IGeneticAlgorithm {
         return newPopulation;
     }
 
-        /*
-        attributes = [
-                      parameter a=> [1,2],
-                      parameter b=> [1,2],
-                      parameter c=> [1,2]
-                  ]
-
-     */
-
     @Override
-    public IPopulation mutatePopulation(IPopulation population, ArrayList<ArrayList<Integer>> attributes) {
+    public Population mutatePopulation(Population population) {
 
         int individualIndex = 0;
 
-        for (IIndividual individual : population.getIndividuals()) {
+        for (Individual  individual : population.getIndividuals()) {
 
             int parameterIndex = 0;
             for (ArrayList<Integer> parameter : attributes) {
@@ -285,4 +288,48 @@ public class GeneticAlgorithm implements IGeneticAlgorithm {
 
         return population;
     }
+
+    private static ArrayList<ArrayList<Integer>> createAllTestCases(ArrayList<ArrayList<Integer>> attributes, ArrayList<ArrayList<Integer>> T, int index, ArrayList<Integer> TestSet) {
+
+        if (index == attributes.size()) {
+            T.add(new ArrayList<>(TestSet));
+            return T;
+        }
+
+        for (int i = 0; i < attributes.get(index).size(); i++) {
+            if (TestSet.size() >= index + 1) {
+                TestSet.set(index, attributes.get(index).get(i));
+            } else {
+                TestSet.add(attributes.get(index).get(i));
+            }
+            T = createAllTestCases(attributes, T, index + 1, TestSet);
+
+        }
+
+        return T;
+    }
+
+    private static Pair<Integer, Integer> getAllDistinctPairs(ArrayList<ArrayList<Integer>> T) {
+        Set<ArrayList<Integer>> distinctPairs = new HashSet<>();
+
+        int repetitivePairs = 0;
+        for (ArrayList<Integer> gene : T) {
+
+            for (int i = 0; i < gene.size() - 1; i++) {
+                for (int j = i + 1; j < gene.size(); j++) {
+                    ArrayList<Integer> distinctPair = new ArrayList<>();
+                    for (int k = 0; k < gene.size(); k++) {
+                        distinctPair.add(k == i ? gene.get(i) : k == j ? gene.get(j) : -1);
+                    }
+                    if (distinctPairs.contains(distinctPair))
+                        repetitivePairs++;
+                    distinctPairs.add(distinctPair);
+                }
+            }
+
+        }
+
+        return new Pair<>(distinctPairs.size(), repetitivePairs);
+    }
+
 }

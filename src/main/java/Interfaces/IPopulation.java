@@ -2,15 +2,11 @@ package Interfaces;
 
 import java.util.ArrayList;
 
-public interface IPopulation {
+public interface IPopulation<IndividualType extends IIndividual<?,?>> {
 
-    IIndividual[] population = new IIndividual[0];
+    ArrayList<IndividualType> getIndividuals();
 
-    double populationFitness = -1;
-
-    ArrayList<IIndividual> getIndividuals();
-
-    IIndividual getFittest();
+    IndividualType getFittest();
 
     void setPopulationFitness(double fitness);
 
@@ -18,9 +14,9 @@ public interface IPopulation {
 
     int size();
 
-    IIndividual setIndividual(int offset, IIndividual individual);
+    void setIndividual(int offset, IndividualType individual);
 
-    IIndividual getIndividual(int offset);
+    IndividualType getIndividual(int offset);
 
     void shuffle();
 

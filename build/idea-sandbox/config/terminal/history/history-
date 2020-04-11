@@ -1,0 +1,500 @@
+npm start
+npm start
+npm start
+npm install create-react-app
+create-react-app client
+npm uninstall create-react-app
+npx create-react-app client
+git status
+git add .
+git commit -sm "database and auth setup" 
+git push origin develop
+git status
+git add .
+git commit -sm "Add node version in package.json"
+git push origin develop
+npm start
+npm start
+npm install concurrently
+npm start
+npm start
+npm start
+npm run start:dev
+npm run build
+npm start
+git status
+git add .
+git commit -sm "client set up (react-app)
+"
+git push origin develop
+npm run start:dev
+npm run start:dev
+npm run build
+npm run build
+git add .
+git commit -sm "Fix Bug"
+git push origin develop
+npm run start:dev
+npm run build
+git status
+git status
+git add .
+git commit -sm "Add Navbar"
+git push origin develop
+git status
+git add .
+git commit -sm "Landing Page"
+git push origin develop
+cd client
+npm install @material-ui/core
+npm install react-router-dom
+npm install react-addons-transition-group@15.4.* 
+npm install react-addons-create-fragment@15.4.*
+npm uninstall react-addons-create-fragment@15.4.*
+npm uninstall react-addons-transition-group@15.4.* 
+ifconfig
+npm start:dev
+npm run start:dev
+npm run start:dev
+npm run build
+nmp start
+npm start
+npm run start:dev
+npm run build
+npm start
+npm run start:dev
+npm run start:dev
+npm run build
+npm start
+npm run build
+npm start
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run build
+npm run start:dev
+git status
+git add .
+git commit -sm "Add About Page"
+git push origin develop
+git status
+git add .
+git commit -sm "Add Network Page"
+git push origin develop
+git status
+git add .
+git commit -sm "Add Order Page"
+git push origin develop
+git add .
+git commit -sm "plain text changes"
+git push origin develop
+git status
+git add .
+git commit -sm "Add Dashboard Page"
+git push origin develop
+git add .
+git commit -sm "Fix Bug"
+git push origin develop
+git add .
+git commit -sm "Fix Bug"
+git push origin develop
+cd client
+npm install react-swipeable-views
+npm install @material-ui-icons
+npm install @material-ui/icons
+npm uninstall @material-ui/icons
+adb reverse tcp:4000 tcp:4000
+git add .
+git commit -sm "Add null checks, loaders, more reponsiveness, more persistent login"
+git push origin develop
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start
+npm run start:dev
+npm run start:dev
+npm run start:dev
+code
+npm install google-spreadsheet@2.0.3
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm start
+npm run start:dev
+npm run start:dev
+git add .
+git commit -sm "Add Order Details in Google sheet"
+git push origin develop
+git add .
+git commit -sm "bug-fix"
+git push origin develop
+brew tap heroku/brew && brew install heroku
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew tap heroku/brew && brew install heroku
+heroku log
+heroku logs
+heroku logs
+herkou login
+heroku login
+ls
+cd Documents/
+cd JantaDelivery/
+heroku create
+heroku logs
+heroku logs --source app
+heroku apps
+heroku apps
+heroku logs --source app
+heroku logs --source jantadelivery
+heroku logs
+heroku logs --app=jantadelivery
+heroku logs
+heroku logs --app=jantadelivery
+ls
+cd Documents/JantaDelivery/
+heroku logs --app=jantadelivery
+heroku logs --app=jantadelivery
+heroku logs --app=jantadelivery
+heroku logs --app=jantadelivery
+git add .
+git commit -sm "bug fix"
+git push origin develop
+npm run start:dev
+npm run start:dev
+git add .
+git commit -sm "bug fix"
+git push origin develop
+git init
+git branch
+git remote add origin https://github.com/bhavya2020/ElexerMotors.git
+git log
+git init
+git remote add origin https://github.com/bhavya2020/ElexerMotors.git
+git branch develop
+git branch master
+npm install
+cd client
+npm install
+cd -
+git status
+git add .
+git commit -sm "Basic Layout :Frontend"
+cd client
+npm install sass
+saas --version
+sass --version
+npm install -g  sass
+sudo npm install -g  sass
+sass --version
+sass --help
+npm uninstall sass
+sudo npm install -g  sass
+npm install node-sass
+npm install @material-ui
+npm install r
+npm install @material-ui/core
+git status
+npm init
+git init
+git remote add origin https://github.com/bhavya2020/ElexerMotors.git
+create-react-app client
+npx create-react-app clent
+npx create-react-app client
+npm install express
+git status
+npm run build
+npm run build
+npm start
+npm run start:dev
+npm install concurrently
+npm run start:dev
+npm run start:dev
+npm install mongoose
+npm install mongod
+npm run start:dev
+npm run build
+npm start
+git status
+git add .
+git commit -sm "Initial Commit"
+git branch develop
+git checkout develop
+git push origin develop
+npm start
+npm install passport passport-local passport-jwt
+npm start
+npm install jsonwebtoken
+npm start
+git diff
+git status
+git add .
+git commit -sm "Add passport authentication"
+npm run start:dev
+npm run start:dev
+ipconfig
+ifconfig
+ifconfig
+ifconfig
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+git add .
+git commit -sm "Navbar, Footer, Login Page, Dashboard, Contact Us"
+git push origin develop
+npm install express-fileupload
+npm install googleapis@39 --save
+git add .
+git commit -sm "Application Page"
+git add .
+git commit -sm "Applications and Messages in Admin Page"
+git add .
+git commit "Basic Landing and About Page"
+git commit -sm= "Basic Landing and About Page"
+git commit -sm  "Basic Landing and About Page"
+git push origin develop
+git add .
+git commit -sm "Animations"
+git push
+git push origin develop
+git diff
+git add .
+git commit -sm "Animation coorection"
+git push origin develop
+cd client
+npm install react-images-upload
+npm install react-swipeable-views
+ifconfig
+git add .
+git commit -sm "Landing page enhancement, Technology Page"
+git push origin develop
+git add .
+git add .
+git commit -sm "Removed Unused Files"
+git push origin develop
+npm run start:dev
+ipconfig
+ifconfig
+ifconfig
+git add .
+git commit -sm "CMS for job Application"
+git add .
+git commit -sm "CMS for social media links"
+git add .
+git commit -sm "CMS for get in touch"
+git add .
+git commit -sm "CMS for technology"
+git add .
+git commit -sm "CMS for about and landing page
+"
+git diff
+git add .
+git commit -sm "CMS for backgrounf images"
+git push origin develop
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+npm run start:dev
+cd client
+npm intsall react-mde
+npm install react-mde
+npm install ReactMarkdown
+npm install react-markdown
+npm run start:dev
+git add .
+git commit -sm "Media Page"
+git push origin develop
+git add .
+git commit -sm "Delete Option in CMS"
+git put origin develop
+git push origin develop
+npm run start:dev

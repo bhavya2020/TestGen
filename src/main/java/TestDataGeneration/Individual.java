@@ -7,48 +7,13 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-public class Individual implements IIndividual {
+public class Individual implements IIndividual<ArrayList<ArrayList<Integer>>,ArrayList<Integer>>  {
 
     private ArrayList<ArrayList<Integer>> chromosome;
+
     private double fitness=-1;
 
-    Random rand = new Random();
-
-    /*
-        attributes = [
-                      parameter a=> [1,2],
-                      parameter b=> [1,2],
-                      parameter c=> [1,2]
-                  ]
-
-     */
-
-    /*
-        T = [
-                [1,1,1],
-                [1,1,2],
-                [1,2,1],
-                [1,2,2],
-                [2,1,1],
-                [2,1,2],
-                [2,2,1],
-                [2,2,2]
-            ]
-
-       c1 = [                       o1 = [
-               [1,2,2],                     [1,2,2],
-               [1,1,2]                      [1,1,2],
-                                            [1,2,1]
-            ]                            ]
-       c2 = [                       o2 = [
-                [1,1,1],                    [1,1,1],
-                [2,2,2],                    [2,2,2]
-                [1,2,1]                ]
-            ]
-     */
-
-
-    public Individual(IIndividual individual){
+    public Individual(Individual individual){
         this.chromosome = individual.getChromosome();
         this.fitness = individual.getFitness();
     }
@@ -56,8 +21,9 @@ public class Individual implements IIndividual {
     // T is set of all possible configurations
     public Individual(ArrayList<ArrayList<Integer>> T) {
 
-        this.chromosome = new ArrayList<ArrayList<Integer>>();
+        this.chromosome = new ArrayList<>();
 
+        Random rand = new Random();
         int chromosomeLength = rand.nextInt(T.size())+1;
 
         Set<Integer> SelectedIndices = new HashSet<>();
@@ -76,7 +42,6 @@ public class Individual implements IIndividual {
         }
     }
 
-
     @Override
     public ArrayList<ArrayList<Integer>> getChromosome() {
         return this.chromosome;
@@ -86,6 +51,7 @@ public class Individual implements IIndividual {
     public int getChromosomeLength() {
         return this.chromosome.size();
     }
+
 
     @Override
     public void setGene(int offset, ArrayList<Integer> gene) {
@@ -107,7 +73,6 @@ public class Individual implements IIndividual {
         return this.fitness;
     }
 
-    @Override
     public void changeGene(int indexOfGeneWithMinimumDistinctPairs, int parameterIndex, Integer missingValue) {
         ArrayList<Integer> gene = getGene(indexOfGeneWithMinimumDistinctPairs);
         gene.set(parameterIndex,missingValue);
