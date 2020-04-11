@@ -21,7 +21,7 @@
         <!-- Add your actions here -->
         <action id="EntryPoint.EntryPoint" class="EntryPoint.EntryPoint" text="Build Test Cases" description="A Test Generating Plugin">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <keyboard-shortcut first-keystroke="alt b" keymap="$default" />
         </action>
-
     </actions>
 </idea-plugin>

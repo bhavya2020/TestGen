@@ -30,6 +30,7 @@ public class EntryPoint extends AnAction {
 
         Project project = event.getProject();
         VirtualFile file = event.getData(PlatformDataKeys.VIRTUAL_FILE);
+        PsiFile file1 = event.getData(PlatformDataKeys.PSI_FILE);
         StringBuilder text = new StringBuilder();
 
         Task t = new Task.Backgroundable(project, "Creating Test Data") {
@@ -95,11 +96,11 @@ public class EntryPoint extends AnAction {
 
                 try {
                     t.join();
+
                     int result = Messages.showYesNoDialog("Would you Like to Download it?", "Test Data Is Ready", Messages.getQuestionIcon());
 
                     if (result == Messages.OK) {
                         WriteAction.run(() -> {
-                            PsiFile file1 = event.getData(PlatformDataKeys.PSI_FILE);
                             assert file1 != null;
                             PsiDirectory parent = file1.getParent();
                             assert parent != null;
