@@ -1,12 +1,14 @@
 package TestDataGeneration;
+
+import utils.Pair;
+
 import java.util.ArrayList;
 
 public class GenerateTestData {
 
+    public static Pair<ArrayList<ArrayList<Integer>>, Double> generateTestData(ArrayList<ArrayList<Integer>> attributes) {
 
-    public static ArrayList<ArrayList<Integer>> generateTestData(ArrayList<ArrayList<Integer>> attributes) {
-
-        GeneticAlgorithm ga = new GeneticAlgorithm(200, 0.05, 0.95, 50, attributes );
+        GeneticAlgorithm ga = new GeneticAlgorithm(200, 0.05, 0.95, 50, attributes);
 
         // Initialize population
         Population population = ga.initPopulation();
@@ -17,7 +19,7 @@ public class GenerateTestData {
         // Keep track of current generation
         int generation = 1;
 
-        while (generation < 10000) {
+        while (!ga.isTerminationConditionMet(population)) {
 
             // Apply crossover
             population = ga.crossoverPopulation(population);
@@ -32,7 +34,7 @@ public class GenerateTestData {
             generation++;
         }
 
-        return  population.getFittest().getChromosome();
+        return new Pair<>(population.getFittest().getChromosome(), population.getFittest().getFitness());
 
     }
 

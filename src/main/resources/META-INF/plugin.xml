@@ -17,11 +17,18 @@
         <!-- Add your extensions here -->
     </extensions>
 
+<!--    <applicationListeners>-->
+<!--        <listener class="ProjectListeners.ProjectOpenListener"-->
+<!--                  topic="com.intellij.openapi.project.ProjectManagerListener"/>-->
+<!--    </applicationListeners>-->
+
     <actions>
         <!-- Add your actions here -->
-        <action id="EntryPoint.EntryPoint" class="EntryPoint.EntryPoint" text="Build Test Cases" description="A Test Generating Plugin">
+        <action id="EntryPoint.EntryPoint" class="EntryPoint.EntryPoint" text="Build Test Cases"
+                description="A test generating plugin">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-            <keyboard-shortcut first-keystroke="alt b" keymap="$default" />
+            <keyboard-shortcut first-keystroke="alt b" keymap="$default"/>
         </action>
     </actions>
+    <idea-version since-build="2019.3.2"/>
 </idea-plugin>

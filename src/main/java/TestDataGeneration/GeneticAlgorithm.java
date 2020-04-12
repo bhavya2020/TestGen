@@ -7,7 +7,7 @@ import utils.Pair;
 import java.util.*;
 
 
-public class GeneticAlgorithm implements IGeneticAlgorithm<Population,Individual> {
+public class GeneticAlgorithm implements IGeneticAlgorithm<Population, Individual> {
 
 
     private int populationSize;
@@ -70,8 +70,24 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population,Individual
             }
 
         }
-        double factor1 = distinctPairs.size() / (double) totalDistinctPairs;
-        double factor2 = 1 - (repetitivePairs / (double) totalRepetitivePairs);
+        double factor1;
+        if (totalDistinctPairs == 0) {
+            if(distinctPairs.size()  == 1)
+                factor1 = 1;
+            else
+                factor1 = 0;
+        } else {
+            factor1 = distinctPairs.size() / (double) totalDistinctPairs;
+        }
+        double factor2;
+        if (totalRepetitivePairs == 0) {
+            if(repetitivePairs == 0)
+                factor2 = 1;
+            else
+                factor2 = 0;
+        } else {
+            factor2 = 1 - (repetitivePairs / (double) totalRepetitivePairs);
+        }
 
         return 0.70 * factor1 + 0.30 * factor2;
     }
@@ -82,7 +98,7 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population,Individual
         double populationFitness = 0;
 
         int IndividualIndex = 0;
-        for (Individual  individual : population.getIndividuals()) {
+        for (Individual individual : population.getIndividuals()) {
 
             double fitness = calcFitness(individual);
             individual.setFitness(fitness);
@@ -98,8 +114,7 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population,Individual
     @Override
     public boolean isTerminationConditionMet(Population population) {
 
-        return population.getFittest().getFitness() == 1;
-//        population.getFittest().getChromosome().size() < 0.75 * size;
+        return population.getFittest().getFitness() >= 0.75;
     }
 
     @Override
@@ -114,7 +129,7 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population,Individual
 
         // Find parent
         double spinWheel = 0;
-        for (Individual  individual : individuals) {
+        for (Individual individual : individuals) {
             spinWheel += individual.getFitness();
             if (spinWheel >= rouletteWheelPosition) {
                 return individual;
@@ -134,8 +149,10 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population,Individual
             //selecting parent based by roulette
             Individual parent1 = selectParent(population);
 
+            Random rand = new Random();
+
             // Apply crossover to this individual?
-            if (this.crossoverRate > Math.random() && populationIndex >= this.elitismCount) {
+            if (this.crossoverRate > (double) rand.nextInt(100) / 100 && populationIndex >= this.elitismCount) {
 
                 // Find second parent
                 Individual parent2 = selectParent(population);
@@ -145,14 +162,11 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population,Individual
                     continue;
                 }
 
-
-                Random rand = new Random();
-
                 int crossoverPoint = rand.nextInt(Math.min(parent1.getChromosomeLength(), parent2.getChromosomeLength()));
 
-                Individual  offspring1 = new Individual(parent2);
+                Individual offspring1 = new Individual(parent2);
 
-                Individual  offspring2 = new Individual(parent1);
+                Individual offspring2 = new Individual(parent1);
 
                 for (int i = 0; i <= crossoverPoint; i++) {
                     offspring1.setGene(i, parent1.getGene(i));
@@ -161,10 +175,10 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population,Individual
 
                 Individual[] fitnessArray = {offspring1, offspring2, parent1, parent2};
 
-                Individual  fittest = null;
+                Individual fittest = null;
                 double bestFitness = -1;
 
-                for (Individual  individual : fitnessArray) {
+                for (Individual individual : fitnessArray) {
                     if (individual.getFitness() > bestFitness) {
                         bestFitness = individual.getFitness();
                         fittest = individual;
@@ -190,7 +204,7 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population,Individual
 
         int individualIndex = 0;
 
-        for (Individual  individual : population.getIndividuals()) {
+        for (Individual individual : population.getIndividuals()) {
 
             int parameterIndex = 0;
             for (ArrayList<Integer> parameter : attributes) {

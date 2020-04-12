@@ -17,13 +17,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import org.jetbrains.annotations.NotNull;
+import utils.Pair;
 import utils.Parse;
 
 import java.util.ArrayList;
 
 
 public class EntryPoint extends AnAction {
-
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
@@ -47,10 +47,12 @@ public class EntryPoint extends AnAction {
                         PsiModifierList psiModifierList = method.getModifierList();
                         PsiAnnotation[] annotations = psiModifierList.getAnnotations();
                         for (PsiAnnotation annotation : annotations) {
-                            if (annotation.hasQualifiedName("custom")) {
+                            if (annotation.hasQualifiedName("Combinatorial.Combinatorial")) {
                                 PsiNameValuePair[] attributes = annotation.getParameterList().getAttributes();
                                 ArrayList<ArrayList<Integer>> attributesValues = Parse.getParsedAttributes(attributes);
-                                ArrayList<ArrayList<Integer>> testData = GenerateTestData.generateTestData(attributesValues);
+                                Pair<ArrayList<ArrayList<Integer>>, Double> p = GenerateTestData.generateTestData(attributesValues);
+                                ArrayList<ArrayList<Integer>> testData = p.getKey();
+                                Double fitness = p.getValue();
                                 String methodName = method.getName();
                                 PsiParameterList parameterList = method.getParameterList();
                                 PsiParameter[] parameters = parameterList.getParameters();
@@ -64,6 +66,8 @@ public class EntryPoint extends AnAction {
                                 text.append(parameterNames);
                                 text.append("\n");
                                 text.append(testData);
+                                text.append("\n");
+                                text.append(fitness);
                                 text.append("\n\n");
                             }
                         }
