@@ -26,12 +26,26 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population, Individua
 
     private int totalRepetitivePairs;
 
-    public GeneticAlgorithm(int populationSize, double mutationRate, double crossoverRate, int elitismCount, ArrayList<ArrayList<Integer>> attributes) {
+    private double requiredFitness;
+
+    private  int lowerBound = 0;
+
+    private int upperBound = 0;
+
+    public GeneticAlgorithm(int populationSize, double mutationRate, double crossoverRate, int elitismCount, ArrayList<ArrayList<Integer>> attributes, double requiredFitness) {
         this.populationSize = populationSize;
         this.mutationRate = mutationRate;
         this.crossoverRate = crossoverRate;
         this.elitismCount = elitismCount;
         this.attributes = attributes;
+        this.requiredFitness = requiredFitness;
+
+        for(ArrayList<Integer> parameter: attributes){
+            this.upperBound += parameter.size();
+            if(parameter.size() > lowerBound){
+                lowerBound = parameter.size();
+            }
+        }
     }
 
     @Override
@@ -41,13 +55,13 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population, Individua
 
         ArrayList<Integer> TestSet = new ArrayList<>();
 
-        T = createAllTestCases(attributes, T, 0, TestSet);
+        this.T = createAllTestCases(attributes, T, 0, TestSet);
 
         Pair<Integer, Integer> P = getAllDistinctPairs(T);
         this.totalDistinctPairs = P.getKey();
         this.totalRepetitivePairs = P.getValue();
 
-        return new Population(populationSize, T);
+        return new Population(populationSize, this.T, lowerBound, upperBound);
     }
 
     @Override
@@ -72,7 +86,7 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population, Individua
         }
         double factor1;
         if (totalDistinctPairs == 0) {
-            if(distinctPairs.size()  == 1)
+            if (distinctPairs.size() == 1)
                 factor1 = 1;
             else
                 factor1 = 0;
@@ -81,7 +95,7 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population, Individua
         }
         double factor2;
         if (totalRepetitivePairs == 0) {
-            if(repetitivePairs == 0)
+            if (repetitivePairs == 0)
                 factor2 = 1;
             else
                 factor2 = 0;
@@ -114,7 +128,16 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population, Individua
     @Override
     public boolean isTerminationConditionMet(Population population) {
 
-        return population.getFittest().getFitness() >= 0.75;
+        return population.getFittest().getFitness() >= requiredFitness || isAllEqual(population);
+    }
+
+    private boolean isAllEqual(Population population) {
+        double fitness = population.getIndividuals().get(0).getFitness();
+        for(Individual individual : population.getIndividuals()){
+            if(individual.getFitness() != fitness)
+                return false;
+        }
+        return true;
     }
 
     @Override
@@ -179,7 +202,7 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population, Individua
                 double bestFitness = -1;
 
                 for (Individual individual : fitnessArray) {
-                    if (individual.getFitness() > bestFitness) {
+                    if (calcFitness(individual) > bestFitness) {
                         bestFitness = individual.getFitness();
                         fittest = individual;
                     } else if (individual.getFitness() == bestFitness) {
@@ -205,6 +228,10 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population, Individua
         int individualIndex = 0;
 
         for (Individual individual : population.getIndividuals()) {
+
+
+            Individual initialIndividual = new Individual(individual);
+            double initialFitness = individual.getFitness();
 
             int parameterIndex = 0;
             for (ArrayList<Integer> parameter : attributes) {
@@ -243,6 +270,7 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population, Individua
                     for (Map.Entry<Integer, Integer> value : OccurrencesOfValues.entrySet()) {
                         if (value.getValue() > maximumOccurrence) {
                             maximumValue = value.getKey();
+                            maximumOccurrence = value.getValue();
                         }
                     }
 
@@ -290,11 +318,18 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population, Individua
                     }
 
                     individual.changeGene(IndexOfGeneWithMinimumDistinctPairs, parameterIndex, missingValue);
-                    population.setIndividual(individualIndex, individual);
 
                 }
 
                 parameterIndex++;
+            }
+
+            double fitness = calcFitness(individual);
+            if (initialFitness < fitness) {
+                individual.setFitness(fitness);
+                population.setIndividual(individualIndex, individual);
+            }else {
+                population.setIndividual(individualIndex,initialIndividual);
             }
 
             individualIndex++;

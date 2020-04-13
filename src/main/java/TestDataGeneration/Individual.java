@@ -7,38 +7,38 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-public class Individual implements IIndividual<ArrayList<ArrayList<Integer>>,ArrayList<Integer>>  {
+public class Individual implements IIndividual<ArrayList<ArrayList<Integer>>, ArrayList<Integer>> {
 
     private ArrayList<ArrayList<Integer>> chromosome;
 
-    private double fitness=-1;
+    private double fitness = -1;
 
-    public Individual(Individual individual){
-        this.chromosome = individual.getChromosome();
+    public Individual(Individual individual) {
+        this.chromosome = new ArrayList<>(individual.getChromosome());
         this.fitness = individual.getFitness();
     }
 
     // T is set of all possible configurations
-    public Individual(ArrayList<ArrayList<Integer>> T) {
+    public Individual(ArrayList<ArrayList<Integer>> T, int lowerBound, int upperBound) {
 
         this.chromosome = new ArrayList<>();
 
         Random rand = new Random();
-        int chromosomeLength = rand.nextInt(T.size())+1;
+        int chromosomeLength = rand.nextInt(upperBound - lowerBound) + lowerBound ;
 
         Set<Integer> SelectedIndices = new HashSet<>();
 
-        for(int i=0;i<chromosomeLength;i++){
+        for (int i = 0; i < chromosomeLength; i++) {
             int randomIndex = rand.nextInt(T.size());
-            if(SelectedIndices.contains(randomIndex)){
+            if (SelectedIndices.contains(randomIndex)) {
                 i--;
                 continue;
             }
             SelectedIndices.add(randomIndex);
         }
 
-        for(int selectedIndex : SelectedIndices){
-            this.chromosome.add(T.get(selectedIndex));
+        for (int selectedIndex : SelectedIndices) {
+            this.chromosome.add(new ArrayList<>(T.get(selectedIndex)));
         }
     }
 
@@ -55,7 +55,7 @@ public class Individual implements IIndividual<ArrayList<ArrayList<Integer>>,Arr
 
     @Override
     public void setGene(int offset, ArrayList<Integer> gene) {
-        this.chromosome.set(offset,gene);
+        this.chromosome.set(offset, gene);
     }
 
     @Override
@@ -75,6 +75,6 @@ public class Individual implements IIndividual<ArrayList<ArrayList<Integer>>,Arr
 
     public void changeGene(int indexOfGeneWithMinimumDistinctPairs, int parameterIndex, Integer missingValue) {
         ArrayList<Integer> gene = getGene(indexOfGeneWithMinimumDistinctPairs);
-        gene.set(parameterIndex,missingValue);
+        gene.set(parameterIndex, missingValue);
     }
 }

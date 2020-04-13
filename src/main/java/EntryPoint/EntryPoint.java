@@ -1,6 +1,7 @@
 package EntryPoint;
 
 import TestDataGeneration.GenerateTestData;
+import TestDataPrioritization.PrioritizeTestData;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -12,6 +13,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
@@ -33,6 +35,33 @@ public class EntryPoint extends AnAction {
         PsiFile file1 = event.getData(PlatformDataKeys.PSI_FILE);
         StringBuilder text = new StringBuilder();
 
+        String requiredFitness = Messages.showInputDialog(project, "Enter the Minimum Fitness Required", "TestGen", Messages.getInformationIcon(), "Fitness", new InputValidator() {
+            @Override
+            public boolean checkInput(String s) {
+                if (s.isEmpty())
+                    return false;
+
+                try {
+                    Double.parseDouble(s);
+                } catch (Exception e) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            @Override
+            public boolean canClose(String s) {
+                try {
+                    Double.parseDouble(s);
+                } catch (Exception e) {
+                    return false;
+                }
+
+                return true;
+            }
+        });
+
         Task t = new Task.Backgroundable(project, "Creating Test Data") {
             @Override
             public void run(@NotNull ProgressIndicator pi) {
@@ -50,8 +79,10 @@ public class EntryPoint extends AnAction {
                             if (annotation.hasQualifiedName("Combinatorial.Combinatorial")) {
                                 PsiNameValuePair[] attributes = annotation.getParameterList().getAttributes();
                                 ArrayList<ArrayList<Integer>> attributesValues = Parse.getParsedAttributes(attributes);
-                                Pair<ArrayList<ArrayList<Integer>>, Double> p = GenerateTestData.generateTestData(attributesValues);
+                                assert requiredFitness != null;
+                                Pair<ArrayList<ArrayList<Integer>>, Double> p = GenerateTestData.generateTestData(attributesValues, Double.parseDouble(requiredFitness));
                                 ArrayList<ArrayList<Integer>> testData = p.getKey();
+                                ArrayList<ArrayList<Integer>> prioritizedTestData = PrioritizeTestData.ApplyIICBP(new ArrayList<>(testData));
                                 Double fitness = p.getValue();
                                 String methodName = method.getName();
                                 PsiParameterList parameterList = method.getParameterList();
@@ -66,6 +97,8 @@ public class EntryPoint extends AnAction {
                                 text.append(parameterNames);
                                 text.append("\n");
                                 text.append(testData);
+                                text.append("\nPrioritized\n");
+                                text.append(prioritizedTestData);
                                 text.append("\n");
                                 text.append(fitness);
                                 text.append("\n\n");
@@ -124,10 +157,18 @@ public class EntryPoint extends AnAction {
                     e.printStackTrace();
                 }
             }
+
+            @Override
+            public void onCancel() {
+                super.onCancel();
+
+            }
         };
 
-        ProgressManager.getInstance().run(t);
+        if (requiredFitness != null)
+            ProgressManager.getInstance().run(t);
 
     }
+
 
 }

@@ -14,11 +14,11 @@ public class Population implements IPopulation<Individual> {
 
     public Population(Population population) {
         // Initial population
-        this.population = population.getIndividuals();
+        this.population =  new ArrayList<>(population.getIndividuals());
         this.populationFitness = population.getPopulationFitness();
     }
 
-    public Population(int populationSize, ArrayList<ArrayList<Integer>> T) {
+    public Population(int populationSize, ArrayList<ArrayList<Integer>> T, int lowerBound, int upperBound) {
         // Initialize the population as an array of individuals
         this.population = new ArrayList<>();
 
@@ -26,7 +26,7 @@ public class Population implements IPopulation<Individual> {
         for (int individualCount = 0; individualCount < populationSize; individualCount++) {
             // Create an individual, initializing its chromosome to the given
             // length
-            Individual individual = new Individual(T);
+            Individual individual = new Individual(T,lowerBound, upperBound);
             // Add individual to population
             this.population.add(individual);
         }
