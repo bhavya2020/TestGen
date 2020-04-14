@@ -40,12 +40,22 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population, Individua
         this.attributes = attributes;
         this.requiredFitness = requiredFitness;
 
+        int maxValue = 0, preMaxValue = 0;
         for(ArrayList<Integer> parameter: attributes){
-            this.upperBound += parameter.size();
+//            this.upperBound += (attributes.size()-1) * parameter.size();
+            if(parameter.size() > maxValue){
+                preMaxValue = maxValue;
+                maxValue = parameter.size();
+            }else if(parameter.size() > preMaxValue){
+                preMaxValue = parameter.size();
+            }
+
             if(parameter.size() > lowerBound){
                 lowerBound = parameter.size();
             }
         }
+
+        upperBound = preMaxValue * maxValue * attributes.size()/2;
     }
 
     @Override
@@ -56,6 +66,8 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population, Individua
         ArrayList<Integer> TestSet = new ArrayList<>();
 
         this.T = createAllTestCases(attributes, T, 0, TestSet);
+
+//        this.upperBound = this.T.size();
 
         Pair<Integer, Integer> P = getAllDistinctPairs(T);
         this.totalDistinctPairs = P.getKey();
