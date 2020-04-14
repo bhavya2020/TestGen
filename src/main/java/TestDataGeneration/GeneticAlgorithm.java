@@ -55,7 +55,7 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population, Individua
             }
         }
 
-        upperBound = preMaxValue * maxValue * attributes.size()/2;
+        upperBound = preMaxValue * maxValue * (attributes.size()/2) +1;
     }
 
     @Override

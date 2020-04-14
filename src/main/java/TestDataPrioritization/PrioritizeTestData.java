@@ -3,8 +3,7 @@ package TestDataPrioritization;
 import java.util.*;
 
 public class PrioritizeTestData {
-
-
+    
     //Incremental-interaction-coverage-based-prioritization
     public static ArrayList<ArrayList<Integer>> ApplyIICBP(ArrayList<ArrayList<Integer>> testData) {
 
@@ -106,19 +105,5 @@ public class PrioritizeTestData {
         return combinatorialSet;
 
     }
-
-//    public static void main(String[] args) {
-//        Set<ArrayList<Integer>> combinatorialSet = new HashSet<>();
-//        ArrayList<ArrayList<Integer>> testData = new ArrayList<>();
-//        ArrayList<Integer> testCase = new ArrayList<>(Arrays.asList(1, 2, 3, 4));
-//        testData.add(testCase);
-//        ArrayList<Integer> testCase2 = new ArrayList<>(Arrays.asList(2, 4, 5, 6));
-//        testData.add(testCase2);
-//        ArrayList<Integer> testCase3 = new ArrayList<>(Arrays.asList(2, 1, 5, 8));
-//        testData.add(testCase3);
-//
-//        combinatorialSet = getCombinatorialSetForTestSuite(testData, 2);
-//        return;
-//    }
 
 }
