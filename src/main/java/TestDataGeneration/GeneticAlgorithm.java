@@ -171,6 +171,7 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population, Individua
 
             //selecting parent based by roulette
             Individual parent1 = selectParent(population);
+            int indexOfParent1 = population.getIndividuals().indexOf(parent1);
 
             Random rand = new Random();
 
@@ -192,30 +193,37 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population, Individua
                 Individual offspring2 = new Individual(parent1);
 
                 for (int i = 0; i <= crossoverPoint; i++) {
-                    offspring1.setGene(i, parent1.getGene(i));
-                    offspring2.setGene(i, parent2.getGene(i));
+                    offspring1.setGene(i, new ArrayList<>(parent1.getGene(i)));
+                    offspring2.setGene(i, new ArrayList<>(parent2.getGene(i)));
+                }
+                for(int i = crossoverPoint; i< offspring1.getChromosomeLength();i++){
+                    offspring1.setGene(i, new ArrayList<>(parent2.getGene(i)));
                 }
 
+                for(int i = crossoverPoint; i< offspring2.getChromosomeLength();i++){
+                    offspring2.setGene(i, new ArrayList<>(parent1.getGene(i)));
+                }
                 Individual[] fitnessArray = {offspring1, offspring2, parent1, parent2};
 
                 Individual fittest = null;
                 double bestFitness = -1;
 
                 for (Individual individual : fitnessArray) {
-                    if (calcFitness(individual) > bestFitness) {
-                        bestFitness = individual.getFitness();
+                    double fitness = calcFitness(individual);
+                    if (fitness > bestFitness) {
+                        bestFitness = fitness;
                         fittest = individual;
-                    } else if (individual.getFitness() == bestFitness) {
+                    } else if (fitness == bestFitness) {
                         assert fittest != null;
                         if (individual.getChromosomeLength() < fittest.getChromosomeLength()) {
-                            bestFitness = individual.getFitness();
+                            bestFitness = fitness;
                             fittest = individual;
                         }
                     }
                 }
-                newPopulation.setIndividual(populationIndex, fittest);
+                newPopulation.setIndividual(indexOfParent1, fittest);
             } else {
-                newPopulation.setIndividual(populationIndex, parent1);
+                newPopulation.setIndividual(indexOfParent1, parent1);
             }
         }
 
@@ -325,7 +333,7 @@ public class GeneticAlgorithm implements IGeneticAlgorithm<Population, Individua
             }
 
             double fitness = calcFitness(individual);
-            if (initialFitness < fitness) {
+            if (initialFitness <=  fitness) {
                 individual.setFitness(fitness);
                 population.setIndividual(individualIndex, individual);
             }else {
