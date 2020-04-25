@@ -24,6 +24,8 @@ import utils.Parse;
 
 import java.util.ArrayList;
 
+import static TestDataCoverageCalculation.CalculateCoverage.getCoverage;
+
 
 public class EntryPoint extends AnAction {
 
@@ -91,7 +93,7 @@ public class EntryPoint extends AnAction {
                                 for (PsiParameter parameter : parameters) {
                                     parameterNames.add(parameter.getName());
                                 }
-
+                                ArrayList<ArrayList<String>> coverage = getCoverage(prioritizedTestData,attributesValues,parameterNames);
                                 text.append(methodName);
                                 text.append("\n");
                                 text.append(parameterNames);
@@ -101,6 +103,8 @@ public class EntryPoint extends AnAction {
                                 text.append(prioritizedTestData);
                                 text.append("\n");
                                 text.append(fitness);
+                                text.append("\n");
+                                text.append(coverage);
                                 text.append("\n\n");
                             }
                         }
