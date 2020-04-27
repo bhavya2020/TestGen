@@ -2,6 +2,7 @@ package EntryPoint;
 
 import TestDataGeneration.GenerateTestData;
 import TestDataPrioritization.PrioritizeTestData;
+import UI.TestData;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import static TestDataCoverageCalculation.CalculateCoverage.getCoverage;
 
 
+
 public class EntryPoint extends AnAction {
 
     @Override
@@ -36,6 +38,10 @@ public class EntryPoint extends AnAction {
         VirtualFile file = event.getData(PlatformDataKeys.VIRTUAL_FILE);
         PsiFile file1 = event.getData(PlatformDataKeys.PSI_FILE);
         StringBuilder text = new StringBuilder();
+        ArrayList<String> methodNames = new ArrayList<>();
+        ArrayList<ArrayList<String>> methodParameters = new ArrayList<>();
+        ArrayList<ArrayList<ArrayList<Integer>>> testDataOfAllMethods = new ArrayList<>();
+        ArrayList<ArrayList<ArrayList<Integer>>> prioritisedTestDataOfAllMethods = new ArrayList<>();
 
         String requiredFitness = Messages.showInputDialog(project, "Enter the Minimum Fitness Required", "TestGen", Messages.getInformationIcon(), "Fitness", new InputValidator() {
             @Override
@@ -94,12 +100,17 @@ public class EntryPoint extends AnAction {
                                     parameterNames.add(parameter.getName());
                                 }
                                 ArrayList<ArrayList<String>> coverage = getCoverage(prioritizedTestData,attributesValues,parameterNames);
+
+                                methodNames.add(methodName);
                                 text.append(methodName);
                                 text.append("\n");
+                                methodParameters.add(parameterNames);
                                 text.append(parameterNames);
                                 text.append("\n");
+                                testDataOfAllMethods.add(testData);
                                 text.append(testData);
                                 text.append("\nPrioritized\n");
+                                prioritisedTestDataOfAllMethods.add(prioritizedTestData);
                                 text.append(prioritizedTestData);
                                 text.append("\n");
                                 text.append(fitness);
@@ -137,6 +148,8 @@ public class EntryPoint extends AnAction {
 
                 try {
                     t.join();
+
+                    new TestData(methodNames,methodParameters,testDataOfAllMethods,prioritisedTestDataOfAllMethods).show();
 
                     int result = Messages.showYesNoDialog("Would you Like to Download it?", "Test Data Is Ready", Messages.getQuestionIcon());
 
