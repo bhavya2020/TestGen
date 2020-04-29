@@ -1,8 +1,10 @@
 package UI;
 
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 
 public class CellRenderer implements TableCellRenderer {

@@ -21,29 +21,31 @@ public class CalculateCoverage {
             for (int j = i + 1; j < attributes.size(); j++) {
                 Set<ArrayList<Integer>> distinctPairs = new HashSet<>();
                 ArrayList<String> resultRow = new ArrayList<>();
-                resultRow.add(parameterNames.get(i) + " " + parameterNames.get(j));
+                resultRow.add("<" + parameterNames.get(i) + "," + parameterNames.get(j) + ">");
                 for (ArrayList<Integer> testDatum : testData) {
                     distinctPairs.add(new ArrayList<>(Arrays.asList(testDatum.get(i), testDatum.get(j))));
                 }
                 StringBuilder pairs = new StringBuilder();
-                for(ArrayList<Integer> distinctPair : distinctPairs){
+                for (ArrayList<Integer> distinctPair : distinctPairs) {
+                    pairs.append("{");
                     pairs.append(distinctPair.get(0));
                     pairs.append(",");
                     pairs.append(distinctPair.get(1));
+                    pairs.append("}");
                     pairs.append(" ");
                 }
                 resultRow.add(pairs.toString());
-                double coverage = distinctPairs.size()/(double) totalDistinctPairs.get(count);
+                double coverage = distinctPairs.size() / (double) totalDistinctPairs.get(count);
                 count++;
-                totalCoverage+=coverage;
-                resultRow.add(String.valueOf(coverage));
+                totalCoverage += coverage;
+                resultRow.add(String.valueOf(coverage*100));
                 result.add(resultRow);
             }
         }
 
-        totalCoverage/=totalDistinctPairs.size();
+        totalCoverage /= totalDistinctPairs.size();
         ArrayList<String> resultRow = new ArrayList<>();
-        resultRow.add(String.valueOf(totalCoverage));
+        resultRow.add(String.valueOf(totalCoverage*100));
         result.add(resultRow);
 
         return result;

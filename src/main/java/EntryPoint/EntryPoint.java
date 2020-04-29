@@ -2,13 +2,12 @@ package EntryPoint;
 
 import TestDataGeneration.GenerateTestData;
 import TestDataPrioritization.PrioritizeTestData;
-import UI.TestData;
+import UI.TestDataDialog;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -18,7 +17,6 @@ import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import org.jetbrains.annotations.NotNull;
 import utils.Pair;
 import utils.Parse;
@@ -26,7 +24,6 @@ import utils.Parse;
 import java.util.ArrayList;
 
 import static TestDataCoverageCalculation.CalculateCoverage.getCoverage;
-
 
 
 public class EntryPoint extends AnAction {
@@ -37,11 +34,14 @@ public class EntryPoint extends AnAction {
         Project project = event.getProject();
         VirtualFile file = event.getData(PlatformDataKeys.VIRTUAL_FILE);
         PsiFile file1 = event.getData(PlatformDataKeys.PSI_FILE);
-        StringBuilder text = new StringBuilder();
         ArrayList<String> methodNames = new ArrayList<>();
         ArrayList<ArrayList<String>> methodParameters = new ArrayList<>();
         ArrayList<ArrayList<ArrayList<Integer>>> testDataOfAllMethods = new ArrayList<>();
         ArrayList<ArrayList<ArrayList<Integer>>> prioritisedTestDataOfAllMethods = new ArrayList<>();
+        ArrayList<ArrayList<ArrayList<String>>> coverageOfAllMethods = new ArrayList<>();
+        ArrayList<Double> fitnessOfAllMethods = new ArrayList<>();
+        ArrayList<String> returnTypes = new ArrayList<>();
+        final String[] className = new String[1];
 
         String requiredFitness = Messages.showInputDialog(project, "Enter the Minimum Fitness Required", "TestGen", Messages.getInformationIcon(), "Fitness", new InputValidator() {
             @Override
@@ -79,6 +79,12 @@ public class EntryPoint extends AnAction {
                     PsiJavaFile psifile = (PsiJavaFile) event.getData(CommonDataKeys.PSI_FILE);
                     assert psifile != null;
                     PsiClass[] classes = psifile.getClasses();
+                    className[0] = classes[0].getQualifiedName();
+                    assert className[0] != null;
+                    String[] splits = className[0].split(".");
+                    if (splits.length > 0) {
+                        className[0] = splits[splits.length - 1];
+                    }
                     PsiMethod[] methods = classes[0].getMethods();
                     for (PsiMethod method : methods) {
                         PsiModifierList psiModifierList = method.getModifierList();
@@ -95,28 +101,20 @@ public class EntryPoint extends AnAction {
                                 String methodName = method.getName();
                                 PsiParameterList parameterList = method.getParameterList();
                                 PsiParameter[] parameters = parameterList.getParameters();
+                                returnTypes.add(method.getReturnType().getCanonicalText());
+
                                 ArrayList<String> parameterNames = new ArrayList<>();
                                 for (PsiParameter parameter : parameters) {
                                     parameterNames.add(parameter.getName());
                                 }
-                                ArrayList<ArrayList<String>> coverage = getCoverage(prioritizedTestData,attributesValues,parameterNames);
+                                ArrayList<ArrayList<String>> coverage = getCoverage(prioritizedTestData, attributesValues, parameterNames);
 
                                 methodNames.add(methodName);
-                                text.append(methodName);
-                                text.append("\n");
                                 methodParameters.add(parameterNames);
-                                text.append(parameterNames);
-                                text.append("\n");
                                 testDataOfAllMethods.add(testData);
-                                text.append(testData);
-                                text.append("\nPrioritized\n");
                                 prioritisedTestDataOfAllMethods.add(prioritizedTestData);
-                                text.append(prioritizedTestData);
-                                text.append("\n");
-                                text.append(fitness);
-                                text.append("\n");
-                                text.append(coverage);
-                                text.append("\n\n");
+                                fitnessOfAllMethods.add(fitness);
+                                coverageOfAllMethods.add(coverage);
                             }
                         }
                     }
@@ -136,43 +134,31 @@ public class EntryPoint extends AnAction {
             @Override
             public void onFinished() {
                 super.onFinished();
+
                 assert project != null;
 
-                final PsiFile[] f = new PsiFile[1];
+                new TestDataDialog(methodNames, methodParameters, testDataOfAllMethods, prioritisedTestDataOfAllMethods, coverageOfAllMethods, fitnessOfAllMethods, file1, file, project, className[0],returnTypes).show();
 
-                Thread t = new Thread(() -> {
-                    f[0] = PsiFileFactory.getInstance(project).createFileFromText("result.txt", PlainTextFileType.INSTANCE, text.toString());
-                });
+//                    int result = Messages.showYesNoDialog("Would you Like to Download it?", "Test Data Is Ready", Messages.getQuestionIcon());
+//
+//                    if (result == Messages.OK) {
+//                        WriteAction.run(() -> {
+//                            assert file1 != null;
+//                            PsiDirectory parent = file1.getParent();
+//                            assert parent != null;
+//                            PsiFile[] files = parent.getFiles();
+//
+//                            for (PsiFile file : files) {
+//                                if (file.getName().equals("result.txt")) {
+//                                    file.delete();
+//                                }
+//                            }
+//                            assert file != null;
+//                            PsiDirectory d = PsiDirectoryFactory.getInstance(project).createDirectory(file.getParent());
+//                            d.add(f[0]);
+//                        });
+//                    }
 
-                ApplicationManager.getApplication().runWriteAction(t);
-
-                try {
-                    t.join();
-
-                    new TestData(methodNames,methodParameters,testDataOfAllMethods,prioritisedTestDataOfAllMethods).show();
-
-                    int result = Messages.showYesNoDialog("Would you Like to Download it?", "Test Data Is Ready", Messages.getQuestionIcon());
-
-                    if (result == Messages.OK) {
-                        WriteAction.run(() -> {
-                            assert file1 != null;
-                            PsiDirectory parent = file1.getParent();
-                            assert parent != null;
-                            PsiFile[] files = parent.getFiles();
-
-                            for (PsiFile file : files) {
-                                if (file.getName().equals("result.txt")) {
-                                    file.delete();
-                                }
-                            }
-                            assert file != null;
-                            PsiDirectory d = PsiDirectoryFactory.getInstance(project).createDirectory(file.getParent());
-                            d.add(f[0]);
-                        });
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
 
             @Override
